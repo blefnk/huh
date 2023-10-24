@@ -15,8 +15,10 @@ type Model struct {
 	form  *huh.Form
 }
 
-func NewModel() Model {
+func NewModel() *Model {
 	var m Model
+	m.class = "Warrior"
+	m.level = "1"
 	f := huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect("Warrior", "Mage", "Rogue").
@@ -31,14 +33,14 @@ func NewModel() Model {
 	)
 
 	m.form = f
-	return m
+	return &m
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return m.form.Init()
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -55,8 +57,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m Model) View() string {
-	v := "Charm Employment Application\n\n" + m.form.View() + "\n\n" + m.class
+func (m *Model) View() string {
+	v := "Charm Employment Application\n\n" + m.form.View() + fmt.Sprintf("Level %s, %s", m.level, m.class)
 	return lipgloss.NewStyle().Margin(1, 2).Render(v)
 }
 
